@@ -1,5 +1,5 @@
 # NLP Experiment
-GOal: After being trained on Markdown files from a local folder (say Handbook) and create a chat interface to be able to get answers to user's quetions.
+Goal: After being trained on Markdown files from a local folder (say Handbook) and create a chat interface to be able to get answers to user's quetions.
 
 ## Steps
 _With inputs from GPT-4_
