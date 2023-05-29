@@ -1,12 +1,17 @@
+import os
 from bs4 import BeautifulSoup
 from markdown import markdown
 
-def markdown_to_text(markdown_string):
-    """ Converts a markdown string to plaintext """
+def markdown_to_text(md_file_path, output_dir):
+    """ Reads a markdown file and converts it to plaintext """
   
+    # Read markdown file
+    with open(md_file_path, 'r') as f:
+        markdown_string = f.read()
+
     # md -> html -> text since BeautifulSoup can extract text cleanly
     html = markdown(markdown_string)
-  
+
     # remove code snippets
     soup = BeautifulSoup(html, "html.parser")
     for code in soup("code"):
@@ -15,19 +20,18 @@ def markdown_to_text(markdown_string):
     # extract text
     text = ''.join(soup.stripped_strings)
   
-    return text
+    # Write to output file
+    output_file_path = os.path.join(output_dir, os.path.basename(md_file_path) + '.txt')
+    with open(output_file_path, 'w') as f:
+        f.write(text)
 
-markdown_text = """
-# Header
-This is a paragraph with **bold text**.
+def convert_all_markdown(input_dir, output_dir):
+    """ Convert all markdown files in a directory (and its subdirectories) to plaintext """
 
-Here is a list:
-- Item 1
-- Item 2
+    for root, dirs, files in os.walk(input_dir):
+        for file in files:
+            if file.endswith(".md"):
+                markdown_to_text(os.path.join(root, file), output_dir)
 
-And here is some code: `print("Hello, World!")`
-"""
 
-plain_text = markdown_to_text(markdown_text)
-
-print(plain_text)
+convert_all_markdown('./data/raw/', './data/processed')
